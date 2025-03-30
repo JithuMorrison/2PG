@@ -7,18 +7,21 @@ const TicTacToe = () => {
 
   // Function to handle a player's move
   const handleClick = (index) => {
-    if (board[index] || winner) return; // Ignore if square is already filled or game is over
-
+    if (board[index] || winner) return;
+  
     const newBoard = board.slice();
     newBoard[index] = isXNext ? 'X' : 'O';
     setBoard(newBoard);
     setIsXNext(!isXNext);
-
+  
     const gameWinner = calculateWinner(newBoard);
     if (gameWinner) {
       setWinner(gameWinner);
+    } else if (!newBoard.includes(null)) {
+      setWinner('Draw');
     }
   };
+  
 
   // Function to calculate the winner
   const calculateWinner = (board) => {
@@ -62,7 +65,9 @@ const TicTacToe = () => {
     <div style={styles.container}>
       <h1 style={styles.title}>Tic Tac Toe</h1>
       {winner ? (
-        <h2 style={styles.winnerText}>{winner} Wins!</h2>
+        <h2 style={styles.winnerText}>
+          {winner === 'Draw' ? "It's a Draw!" : `${winner} Wins!`}
+        </h2>
       ) : (
         <h2 style={styles.nextPlayerText}>Next Player: {isXNext ? 'X' : 'O'}</h2>
       )}

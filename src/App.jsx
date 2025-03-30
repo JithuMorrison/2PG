@@ -23,7 +23,10 @@ function App() {
       <h1>Choose a Game</h1>
       <select
         value={currentSection}
-        onChange={(e) => setCurrentSection(e.target.value)}
+        onChange={(e) => {
+          setCurrentSection(e.target.value);
+          e.target.blur(); // 👈 Remove focus
+        }}
         style={{ marginBottom: '20px', padding: '5px 10px' }}
       >
         <option value="TicTacToe">Tic Tac Toe</option>
