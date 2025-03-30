@@ -27,8 +27,11 @@ const addRandomTile = (grid) => {
 const Game2048Lite = () => {
   const size = 3; // 3x3 grid for simplicity
   const [grid, setGrid] = useState(generateInitialGrid(size));
+  const [gameOver, setGameOver] = useState(false);
 
   const handleKeyDown = (e) => {
+    if (gameOver) return;
+
     let newGrid = [...grid.map(row => [...row])];
     let moved = false;
 
@@ -54,35 +57,51 @@ const Game2048Lite = () => {
       return newG;
     };
 
+    const isGridEqual = (a, b) => {
+      return a.every((row, r) => row.every((val, c) => val === b[r][c]));
+    };
+
+    let originalGrid = [...newGrid.map(row => [...row])];
+
     switch (e.key) {
       case 'ArrowLeft':
         newGrid = newGrid.map(row => moveRowLeft(row));
-        moved = true;
         break;
       case 'ArrowRight':
         newGrid = newGrid.map(row => moveRowLeft(row.reverse()).reverse());
-        moved = true;
         break;
       case 'ArrowUp':
         newGrid = rotateGrid(newGrid, false);
         newGrid = newGrid.map(row => moveRowLeft(row));
         newGrid = rotateGrid(newGrid, true);
-        moved = true;
         break;
       case 'ArrowDown':
         newGrid = rotateGrid(newGrid, false);
         newGrid = newGrid.map(row => moveRowLeft(row.reverse()).reverse());
         newGrid = rotateGrid(newGrid, true);
-        moved = true;
         break;
       default:
-        break;
+        return;
     }
 
-    if (moved) {
+    if (!isGridEqual(originalGrid, newGrid)) {
       addRandomTile(newGrid);
       setGrid(newGrid);
+    } else {
+      checkGameOver(grid);
     }
+  };
+
+  const checkGameOver = (grid) => {
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (grid[r][c] === 0) return false;
+        if (c < size - 1 && grid[r][c] === grid[r][c + 1]) return false;
+        if (r < size - 1 && grid[r][c] === grid[r + 1][c]) return false;
+      }
+    }
+    setGameOver(true);
+    return true;
   };
 
   useEffect(() => {
@@ -124,6 +143,7 @@ const Game2048Lite = () => {
           ))
         )}
       </div>
+      {gameOver && <h2 style={{ color: 'red', marginTop: '20px' }}>Game Over!</h2>}
       <p style={{ marginTop: '20px' }}>Use arrow keys to play</p>
     </div>
   );
