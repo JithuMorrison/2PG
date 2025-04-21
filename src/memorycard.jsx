@@ -21,6 +21,18 @@ const MemoryCardGame = () => {
     'https://th.bing.com/th/id/R.5a575bac13497a068affd69c25fe332a?rik=nNjmBWKoUk3QOA&riu=http%3a%2f%2fwww.ontracksafaris.com%2fassets%2fimages%2fsri-510x574.jpg&ehk=46YyWUoSjaThhGBoxoHZi1Si2CLtQ82j2zRg9zmi2z8%3d&risl=&pid=ImgRaw&r=0',
     'https://th.bing.com/th/id/OIP.SdZZIkNrq9GOGBMFHjgUhwHaHa?rs=1&pid=ImgDetMain'
   ];
+  
+  const resetGame = () => {
+    setCount(0);
+    setPrevCard(null);
+    setPrevVal("");
+    setTotalMatched(0);
+    setTotalTries(6);
+    setMessage("Number of Tries Left: 6");
+    setFlippedCards([]);
+    setMatchedCards([]);
+    setTypes(types.sort(() => Math.random() - 0.5));
+  };
 
   useEffect(() => {
     // Initialize game
@@ -128,6 +140,25 @@ const MemoryCardGame = () => {
       </div>
       <div style={{ marginTop: '20px', fontSize: '20px', fontWeight: 'bold' }}>
         {message}
+        {(message === "You Win" || message === "You Lose") && (
+            <button
+              onClick={resetGame}
+              style={{
+                display: 'block',
+                margin: '20px auto 0',
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                marginTop: '10px',
+              }}
+            >
+              Play Again
+            </button>
+        )}
       </div>
     </div>
   );
